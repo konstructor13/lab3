@@ -1,7 +1,7 @@
 name: TestCICD
 on:
   push:
-    branches: [main]
+    branches: [ master ]
 jobs:
   test-and-package:
     runs-on: ubuntu-latest
