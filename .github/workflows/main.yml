@@ -1,4 +1,4 @@
-name: Test
+name: TestCICD
 on:
   push:
     branches: [main]
@@ -23,7 +23,7 @@ jobs:
         run: pip install -r requirements.txt
         # прогоняет тесты и вводит в html
       - name: "Run tests and code coverage analysis"
-        run: pytest /test.py -v --html=${{ env.PYTEST_REPORT_PATH }} --self-contained-html
+        run: pytest test.py -v --html=${{ env.PYTEST_REPORT_PATH }} --self-contained-html
         # архивирует
       - name: "Archive pytest reports"
         uses: actions/upload-artifact@v3
