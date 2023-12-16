@@ -20,7 +20,7 @@ jobs:
           architecture: 'x64'
           # загрузка библиотек
       - name: "Install project dependencies"
-        run: pip install -r requirements.txt
+        run: pip3 install -r requirements.txt
         # прогоняет тесты и вводит в html
       - name: "Run tests and code coverage analysis"
         run: pytest test.py -v --html=${{ env.PYTEST_REPORT_PATH }} --self-contained-html
