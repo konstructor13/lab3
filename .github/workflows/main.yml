@@ -1,0 +1,47 @@
+name: Test
+on:
+  push:
+    branches: [main]
+jobs:
+  test-and-package:
+    runs-on: ubuntu-latest
+    env:
+      COVERAGE_XML_REPORT_PATH: /tmp/coverage_xml_report.xml
+      PYTEST_REPORT_PATH: /tmp/pytest_report.html
+    steps:
+      # проверка репозитория
+      - name: "Checking repository"
+        uses: actions/checkout@v3
+        # установка python в виртуальное окружение
+      - name: "Install python in venv"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+          architecture: 'x64'
+          # загрузка библиотек
+      - name: "Install project dependencies"
+        run: pip install -r requirements.txt
+        # прогоняет тесты и вводит в html
+      - name: "Run tests and code coverage analysis"
+        run: pytest test.py -v --html=${{ env.PYTEST_REPORT_PATH }} --self-contained-html
+        # архивирует
+      - name: "Archive pytest reports"
+        uses: actions/upload-artifact@v3
+        if: ${{!cancelled()}}
+        with:
+          name: "Test and reports"
+          path: |
+            ${{ env.PYTEST_REPORT_PATH }}
+
+  # архивирует сам код
+  upload_artifact:
+    needs: "test-and-package"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checking repository"
+        uses: actions/checkout@v3
+      - name: "Publish package as artifact"
+        uses: actions/upload-artifact@v3
+        with:
+          name: "code"
+          path: "src"
